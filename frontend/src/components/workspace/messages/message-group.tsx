@@ -362,10 +362,7 @@ function MessageGroupComponent({
       : undefined;
 
   const processingPanel = (
-    <ChainOfThought
-      className={cn("w-full gap-2 rounded-lg border p-0.5", className)}
-      open={true}
-    >
+    <ChainOfThought className={cn("w-full gap-2 p-0.5", className)} open={true}>
       {collapsibleAboveLastToolCallSteps.length > 0 && (
         <Button
           key="above"

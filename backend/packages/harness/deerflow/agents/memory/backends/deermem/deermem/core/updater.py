@@ -851,7 +851,7 @@ def _message_identity(msg: Any) -> tuple[str, ...] | None:
 
 
 # DeerMem is portable; the host test pins this map to its UI allowlist.
-_MEMORY_UI_LANGUAGES = {"en-US": "English", "zh-CN": "Simplified Chinese"}
+_MEMORY_UI_LANGUAGES = {"en-US": "English", "zh-CN": "Simplified Chinese", "vi-VN": "Vietnamese"}
 
 
 def _memory_language_preference(messages: list[Any]) -> str:

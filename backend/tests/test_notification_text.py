@@ -13,7 +13,11 @@ from deerflow.persistence.scheduled_task_runs.sql import run_summary
 TASK_ID = "task-0f3c9a7d5b2e4c1a"
 OCCURRENCE_ID = "task-run-6a1d0c4e9b7f2a35"
 RUN_ID = "3f2b8c1e-6d4a-4b9e-9a7c-0e5d1f2a3b4c"
-CLOSING = {"en-US": "Open DeerFlow → Scheduled tasks for details.", "zh-CN": "在 DeerFlow 的定时任务页查看详情。"}
+CLOSING = {
+    "en-US": "Open DeerFlow → Scheduled tasks for details.",
+    "zh-CN": "在 DeerFlow 的定时任务页查看详情。",
+    "vi-VN": "Mở DeerFlow → Tác vụ theo lịch để xem chi tiết.",
+}
 _CJK = re.compile(r"[一-鿿]")
 # Stems of every English sentence; none may leak into the Chinese text.
 _EN_STEMS = ("Scheduled task", "Finished", "A run failed", "Ran, but", "Paused", "Result:", "Open DeerFlow", "The last run", "Goal met", "Untitled")
@@ -159,7 +163,7 @@ def test_generic_reason_never_repeats_the_sentence(locale, code, event, reason_c
 
 def test_every_reason_code_exists_in_both_locales():
     assert set(_GOAL_REASON_TEXT) == set(NOTIFICATION_LOCALES)
-    assert set(_GOAL_REASON_TEXT["en-US"]) == set(_GOAL_REASON_TEXT["zh-CN"])
+    assert set(_GOAL_REASON_TEXT["en-US"]) == set(_GOAL_REASON_TEXT["zh-CN"]) == set(_GOAL_REASON_TEXT["vi-VN"])
     assert _GOAL_REASON_TEXT["en-US"]["unknown"] == "no reason was recorded"
     for code, text in _GOAL_REASON_TEXT["zh-CN"].items():
         assert _CJK.search(text), code
@@ -170,7 +174,14 @@ def test_unknown_reason_is_never_forwarded(locale):
     text = render_notification_text(notice("run_unmet", locale=locale, reason_code="provider said: secret", run_status="unmet"))
     assert "secret" not in text
     # An unrecognized code says nothing more than "the goal wasn't met".
-    assert text.splitlines()[1] == {"en-US": "Ran, but the goal wasn't met.", "zh-CN": "已运行，但目标未达成。"}[locale]
+    assert (
+        text.splitlines()[1]
+        == {
+            "en-US": "Ran, but the goal wasn't met.",
+            "zh-CN": "已运行，但目标未达成。",
+            "vi-VN": "Đã chạy, nhưng chưa đạt mục tiêu.",
+        }[locale]
+    )
 
 
 @pytest.mark.parametrize("status", ["success", "unmet"])
@@ -462,6 +473,24 @@ def test_runtime_notices_render_localized_without_ids_or_links(locale):
             "Waiting for your input in the conversation.",
             "Question: Which target branch should we tag?",
             "Open DeerFlow → Conversations to continue.",
+        ]
+    elif locale == "vi-VN":
+        assert completed.splitlines() == [
+            "Tác vụ “Ship release notes”",
+            "Đã hoàn thành. Đã đạt mục tiêu, kèm một giả định.",
+            "Kết quả: Drafted the changelog and verified links.",
+            "Mở DeerFlow → Cuộc trò chuyện để xem chi tiết.",
+        ]
+        assert failed.splitlines() == [
+            "Tác vụ “Ship release notes”",
+            "Không hoàn thành được.",
+            "Mở DeerFlow → Cuộc trò chuyện để xem chi tiết.",
+        ]
+        assert input_needed.splitlines() == [
+            "Tác vụ “Ship release notes”",
+            "Đang chờ bạn trả lời trong cuộc trò chuyện.",
+            "Câu hỏi: Which target branch should we tag?",
+            "Mở DeerFlow → Cuộc trò chuyện để tiếp tục.",
         ]
     else:
         assert completed.splitlines() == [
