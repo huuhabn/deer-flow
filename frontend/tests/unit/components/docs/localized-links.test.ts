@@ -3,7 +3,10 @@ import { join, relative } from "node:path";
 
 import { describe, expect, it } from "@rstest/core";
 
-import { localizeDocsHref } from "@/components/docs/localized-links";
+import {
+  localizeDocsHref,
+  resolveDocsLang,
+} from "@/components/docs/localized-links";
 
 const CONTENT_ROOT = join(process.cwd(), "src/content");
 
@@ -17,6 +20,18 @@ function findMdxFiles(directory: string): string[] {
         : [];
   });
 }
+
+describe("resolveDocsLang", () => {
+  it.each([
+    ["en", "en"],
+    ["zh", "zh"],
+    ["vi", "en"],
+    ["fr", "en"],
+    [undefined, "en"],
+  ] as const)("maps %s to %s", (lang, expected) => {
+    expect(resolveDocsLang(lang)).toBe(expected);
+  });
+});
 
 describe("localizeDocsHref", () => {
   it.each([

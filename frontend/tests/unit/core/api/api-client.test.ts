@@ -98,7 +98,9 @@ test("sends the session cookie and CSRF header when creating a thread", async ()
 
   await getAPIClient(true).threads.create({ threadId: "thread-1" });
 
-  const init = fetchFn.mock.calls[0]?.[1] as RequestInit | undefined;
+  const init = (
+    fetchFn.mock.calls[0] as [unknown, RequestInit?] | undefined
+  )?.[1];
   expect(init?.credentials).toBe("include");
   expect(new Headers(init?.headers).get("X-CSRF-Token")).toBe("cookie-token");
 });

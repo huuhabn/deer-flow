@@ -2,6 +2,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { type ReactNode } from "react";
 
+import { resolveDocsLang } from "@/components/docs/localized-links";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LOCALE, type Locale } from "@/core/i18n/locale";
 import { getI18n } from "@/core/i18n/server";
@@ -27,7 +28,7 @@ export async function Header({
 }: HeaderProps) {
   const isExternalHome = !homeURL;
   const { locale: resolvedLocale, t } = await getI18n(locale ?? DEFAULT_LOCALE);
-  const lang = resolvedLocale.substring(0, 2);
+  const docsLang = resolveDocsLang(resolvedLocale.substring(0, 2));
   return (
     <header
       className={cn(
@@ -47,7 +48,7 @@ export async function Header({
       </div>
       <nav className="ml-auto hidden items-center gap-5 text-sm font-medium sm:flex md:mr-8 md:gap-8">
         <Link
-          href={`/${lang}/docs`}
+          href={`/${docsLang}/docs`}
           className="text-secondary-foreground hover:text-foreground transition-colors"
         >
           {t.home.docs}
@@ -87,7 +88,7 @@ export async function Header({
       </div>
       <MobileNav
         links={[
-          { href: `/${lang}/docs`, label: t.home.docs },
+          { href: `/${docsLang}/docs`, label: t.home.docs },
           { href: "/blog/posts", label: t.home.blog },
         ]}
         search={search}

@@ -1,5 +1,6 @@
 import "katex/dist/katex.min.css";
 
+import { redirect } from "next/navigation";
 import { Search } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import { Layout } from "nextra-theme-docs";
@@ -7,6 +8,10 @@ import { Layout } from "nextra-theme-docs";
 import { DocsHtmlLang } from "@/components/docs/docs-html-lang";
 import { DocsLanguageProvider } from "@/components/docs/docs-language-context";
 import { buildLocalizedDocsPageMap } from "@/components/docs/docs-page-map";
+import {
+  isSupportedDocsLang,
+  resolveDocsLang,
+} from "@/components/docs/localized-links";
 import { Footer } from "@/components/landing/footer";
 import { Header } from "@/components/landing/header";
 import { getLocaleByLang } from "@/core/i18n/locale";
@@ -19,7 +24,14 @@ const i18n = [
 ];
 
 export default async function DocLayout({ children, params }) {
-  const { lang } = await params;
+  const { lang: requestedLang } = await params;
+  // Docs MDX ships for en/zh only; UI locales like vi must not call Nextra
+  // with a missing content tree (SSR TypeError). Deep paths are rewritten by
+  // nginx when present; this layout guard covers direct Next access.
+  if (!isSupportedDocsLang(requestedLang)) {
+    redirect(`/${resolveDocsLang(requestedLang)}/docs`);
+  }
+  const lang = requestedLang;
   const locale = getLocaleByLang(lang);
   const pages = await getPageMap(`/${lang}`);
   const pageMap = buildLocalizedDocsPageMap(`/${lang}/docs`, pages);
