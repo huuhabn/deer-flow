@@ -1329,12 +1329,6 @@ export function MessageList({
         key={`duration-group:${group.id ?? groupIndex}`}
         className="flex w-full flex-col gap-2"
       >
-        {displays.map((display) => (
-          <RunDuration
-            key={display.runId}
-            durationSeconds={display.durationSeconds}
-          />
-        ))}
         {content}
       </div>
     );

@@ -2,7 +2,7 @@
 
 from collections.abc import Mapping
 
-UI_LANGUAGES = {"en-US": "English", "zh-CN": "Simplified Chinese"}
+UI_LANGUAGES = {"en-US": "English", "zh-CN": "Simplified Chinese", "vi-VN": "Vietnamese"}
 
 
 def ui_locale(context: object) -> str | None:

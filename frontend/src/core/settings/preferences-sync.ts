@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { SUPPORTED_LOCALES } from "@/core/i18n/locale";
+
 const fields = {
   notification_enabled: z.boolean().nullable(),
   model_name: z.string().max(200).nullable(),
@@ -13,7 +15,7 @@ const fields = {
     .nullable(),
   // The web UI language. Not a local setting: the Gateway reads it to word
   // scheduled-task IM notices in the language the user reads DeerFlow in.
-  locale: z.enum(["en-US", "zh-CN"]).nullable(),
+  locale: z.enum(SUPPORTED_LOCALES).nullable(),
 };
 const schema = z.object(fields).partial();
 export type Preferences = z.infer<typeof schema>;

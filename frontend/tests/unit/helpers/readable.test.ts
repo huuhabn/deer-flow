@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@rstest/core";
 
 import { enUS } from "@/core/i18n/locales/en-US";
+import { viVN } from "@/core/i18n/locales/vi-VN";
 import { zhCN } from "@/core/i18n/locales/zh-CN";
 
 import { findRawIdentifiers } from "../../e2e/utils/raw-identifiers";
@@ -58,6 +59,7 @@ describe("raw identifier guard", () => {
   it.each([
     ["en-US", enUS],
     ["zh-CN", zhCN],
+    ["vi-VN", viVN],
   ] as const)(
     "no scheduled-task copy in %s contains a raw identifier",
     (_locale, t) => {
@@ -74,6 +76,7 @@ describe("raw identifier guard", () => {
   it.each([
     ["en-US", enUS],
     ["zh-CN", zhCN],
+    ["vi-VN", viVN],
   ] as const)(
     "no goal bar copy in %s contains a raw identifier",
     (_locale, t) => {

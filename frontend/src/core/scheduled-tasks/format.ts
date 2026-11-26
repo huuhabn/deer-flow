@@ -17,7 +17,7 @@ export type TaskTimeLabels = {
 export type FormatTaskTimeOptions = {
   /** IANA zone the time is shown in. */
   timeZone: string;
-  /** App locale ("en-US", "zh-CN"); anything starting with "zh" formats as Chinese. */
+  /** App locale ("en-US", "zh-CN", "vi-VN"); "zh*" formats as Chinese and "vi*" as Vietnamese. */
   locale: string;
   labels: TaskTimeLabels;
   now?: Date;
@@ -73,6 +73,7 @@ function pad2(value: number): string {
 
 const EN_WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const ZH_WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+const VI_WEEKDAYS = ["CN", "Th 2", "Th 3", "Th 4", "Th 5", "Th 6", "Th 7"];
 const EN_MONTHS = [
   "Jan",
   "Feb",
@@ -90,6 +91,10 @@ const EN_MONTHS = [
 
 function isZh(locale: string): boolean {
   return locale.toLowerCase().startsWith("zh");
+}
+
+function isVi(locale: string): boolean {
+  return locale.toLowerCase().startsWith("vi");
 }
 
 /**
@@ -111,13 +116,15 @@ function dayPart(
       DAY_MS,
   );
   const zh = isZh(locale);
+  const vi = isVi(locale);
   if (labels) {
     if (diff === 0) return { relative: labels.today, absolute: "" };
     if (diff === 1) return { relative: labels.tomorrow, absolute: "" };
     if (diff === -1) return { relative: labels.yesterday, absolute: "" };
   }
   if (labels && diff > 1 && diff < 7) {
-    const weekday = (zh ? ZH_WEEKDAYS : EN_WEEKDAYS)[date.weekday] ?? "";
+    const weekday =
+      (zh ? ZH_WEEKDAYS : vi ? VI_WEEKDAYS : EN_WEEKDAYS)[date.weekday] ?? "";
     return { relative: null, absolute: weekday };
   }
   const sameYear = date.year === now.year;
@@ -125,6 +132,14 @@ function dayPart(
     return {
       relative: null,
       absolute: `${sameYear ? "" : `${date.year}年`}${date.month}月${date.day}日`,
+    };
+  }
+  if (vi) {
+    return {
+      relative: null,
+      absolute: sameYear
+        ? `${date.day} thg ${date.month}`
+        : `${date.day} thg ${date.month}, ${date.year}`,
     };
   }
   const month = EN_MONTHS[date.month - 1] ?? "";

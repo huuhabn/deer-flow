@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 # Languages of DeerFlow's own IM texts (scheduled-task notices, /connect and
 # /goal replies): the web UI's languages.
-NotificationLocale = Literal["en-US", "zh-CN"]
+NotificationLocale = Literal["en-US", "zh-CN", "vi-VN"]
 
 
 class SlackChannelConnectionConfig(BaseModel):

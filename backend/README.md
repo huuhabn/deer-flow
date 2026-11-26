@@ -1,6 +1,6 @@
 # DeerFlow Backend
 
-**Language:** English | [简体中文](README_zh.md)
+**Language:** English
 
 DeerFlow is a LangGraph-based AI super agent with sandbox execution, persistent memory, and extensible tool integration. The backend enables AI agents to execute code, browse the web, manage files, delegate tasks to subagents, and retain context across conversations - all in isolated, per-thread environments.
 
@@ -350,7 +350,7 @@ cd backend
 uv run langgraph dev --allow-blocking
 ```
 
-Run it from `backend/` so the CLI discovers `langgraph.json`. The in-memory
+Run it from `backend/` so the CLI discovers `p`. The in-memory
 server is intended for development and testing, not production deployment. The
 flag permits DeerFlow's synchronous configuration and graph-factory setup
 during local Studio requests; it is not a production-server setting. Its local

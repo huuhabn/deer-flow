@@ -72,6 +72,7 @@ _PROVIDER_NAMES: dict[str, dict[str, str]] = {
         "wecom": "WeCom",
     },
     "zh-CN": {"dingtalk": "钉钉", "feishu": "飞书", "wechat": "微信", "wecom": "企业微信"},
+    "vi-VN": {},
 }
 
 # Replies to ``/connect <code>`` (Telegram: the ``/start <code>`` deep link).
@@ -90,6 +91,13 @@ CONNECT_REPLY_TEXT: dict[str, dict[str, str]] = {
         "invalid_link": "{provider} 绑定链接无效或已过期。",
         "incomplete": "无法通过这条消息完成 {provider} 绑定。",
         "private_chat_only": "请在与机器人的私聊中发送绑定码。",
+    },
+    "vi-VN": {
+        "connected": "Đã kết nối {provider} với DeerFlow.",
+        "invalid_code": "Mã kết nối {provider} không hợp lệ hoặc đã hết hạn.",
+        "invalid_link": "Liên kết kết nối {provider} không hợp lệ hoặc đã hết hạn.",
+        "incomplete": "Không hoàn tất được kết nối {provider} từ tin nhắn này.",
+        "private_chat_only": "Hãy gửi mã kết nối trong cuộc trò chuyện riêng với bot.",
     },
 }
 
