@@ -86,6 +86,23 @@ test("ignores reconnect metadata storage access failures", () => {
   expect(() => clearReconnectRun("thread-1", "run-1")).not.toThrow();
 });
 
+test("sends the session cookie and CSRF header when creating a thread", async () => {
+  const fetchFn = rs.fn(async () => {
+    return new Response(JSON.stringify({ thread_id: "thread-1" }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+  rs.stubGlobal("fetch", fetchFn);
+  rs.stubGlobal("document", { cookie: "csrf_token=cookie-token" });
+
+  await getAPIClient(true).threads.create({ threadId: "thread-1" });
+
+  const init = fetchFn.mock.calls[0]?.[1] as RequestInit | undefined;
+  expect(init?.credentials).toBe("include");
+  expect(new Headers(init?.headers).get("X-CSRF-Token")).toBe("cookie-token");
+});
+
 test.each(["http", "network"])(
   "does not retry run creation after an ambiguous %s failure",
   async (failure) => {

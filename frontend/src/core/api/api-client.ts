@@ -29,16 +29,20 @@ import { forceChatRunStreamOptions } from "./stream-mode";
  * the contract stays in lockstep.
  */
 function injectCsrfHeader(_url: URL, init: RequestInit): RequestInit {
+  // The SDK fetch defaults to same-origin credentials. A split-origin Gateway
+  // then receives the CSRF header without the csrf_token cookie and rejects
+  // the call. Include credentials on every SDK request, including GETs.
+  const next: RequestInit = { ...init, credentials: "include" };
   if (!isStateChangingMethod(init.method ?? "GET")) {
-    return init;
+    return next;
   }
   const token = readCsrfCookie();
-  if (!token) return init;
+  if (!token) return next;
   const headers = new Headers(init.headers);
   if (!headers.has("X-CSRF-Token")) {
     headers.set("X-CSRF-Token", token);
   }
-  return { ...init, headers };
+  return { ...next, headers };
 }
 
 // Run statuses that have reached a terminal state where no further streaming
@@ -482,7 +486,10 @@ function createCompatibleClient(isMock?: boolean): LangGraphClient {
   // can create the same run more than once after the backend accepted the
   // original request. The SDK also uses this client's transport for recovery
   // GETs, which must retain normal HTTP retries (including transient 5xx).
-  const streamRecoveryClient = new StreamRecoveryClient({ apiUrl });
+  const streamRecoveryClient = new StreamRecoveryClient({
+    apiUrl,
+    onRequest: injectCsrfHeader,
+  });
   const runCreationClient = new RunsClient({
     apiUrl,
     callerOptions: {
