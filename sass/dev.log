@@ -1,0 +1,9 @@
+$ next dev --port "3002"
+▲ Next.js 16.4.2 (Turbopack)
+- Local:         http://localhost:3002
+- Network:       http://10.25.100.117:3002
+✓ Ready in 232ms
+✓ Running next.config.ts took 289ms
+
+⚠ Your version of Next.js is affected by a known security vulnerability. This command is continuing after the upgrade reminder.
+Reference: https://registry.npmjs.org/-/npm/v1/security/advisories/bulk

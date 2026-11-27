@@ -34,7 +34,7 @@ export function RunActivity({ startTime }: { startTime: number | null }) {
     >
       <Clock3Icon className="size-4" />
       <Shimmer duration={1}>{t.runDuration.working}</Shimmer>
-      {formatted && <span aria-hidden="true">({formatted})</span>}
+      {formatted && <span aria-hidden="true">{formatted}</span>}
     </div>
   );
 }
